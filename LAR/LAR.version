@@ -1,0 +1,11 @@
+#Informacion sobre la version del modulo
+#---------------------------------------
+#Nombre del Modulo/Proyecto
+PROJECT_NAME=LAR
+#Version del Modulo/Proyecto
+PROJECT_VERSION=1.0.0.3
+#Nombre de los proyectos/modulos de los que depende,
+#deben estar separados por coma sin espacios en blanco antes o después de la coma
+#cada proyecto debe indicar despues del signo "=" la version requerida
+#EJ: REQUIRED_MODULES=Proyecto 1=1.0.0.0,Otro Proyecto=2.0.1.1,Otro Proyecto Mas=1.1.1
+REQUIRED_MODULES=ADVersionControl=1.0.0.2

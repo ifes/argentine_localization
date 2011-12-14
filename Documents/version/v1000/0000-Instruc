@@ -1,0 +1,53 @@
+LAR v1000: Localización Argentina
+__________________________________________________________________________________________________
+Siguiendo las instrucciones se agrega a este proyecto:
+
+Primer versión de la Localización Argentina
+Modificaciones al packout para poder exportar tabs específicos y campos con tipo de entidad indicada 
+ 
+__________________________________________________________________________________________________
+
+Requerimientos:
+	 * Adempiere360
+__________________________________________________________________________________________________
+Modificaciones:
+
+
+//DB
+* Modificada tabla AD_Package_exp_detail
+	+ Agregada columna AD_Tab0_ID numeric(10,0),
+	+ Agregada columna AD_Tab1_ID numeric(10,0),
+	+ Agregada columna AD_Tab2_ID numeric(10,0),
+	+ Agregada columna AD_Tab3_ID numeric(10,0),
+	+ Agregada columna TargetEntityType_ID numeric(10,0)
+
+//Diccionario
+* Modificada tabla AD_Package_exp_detail
+	+ Agregada columna AD_Tab0_ID,
+	+ Agregada columna AD_Tab1_ID,
+	+ Agregada columna AD_Tab2_ID,
+	+ Agregada columna AD_Tab3_ID,
+	+ Agregada columna TargetEntityType_ID
+* Modificada ventana PackOut, tab AD_Package_exp_detail
+	+ Agregado campo AD_Tab0_ID,
+	+ Agregado campo AD_Tab1_ID,
+	+ Agregado campo AD_Tab2_ID,
+	+ Agregado campo AD_Tab3_ID,
+	+ Agregado campo TargetEntityType_ID
++ Creado tipo de entidad LAR
++ Creada Referencia EntityTypeID
+
+//Fuente
+* Modificada clase ElementHandler
+* Modificada clase PackOut
+* Modificada clase MenuElementHandler
+* Modificada clase TabElementHandler
+* Modificada clase TableElementHandler
+* Modificada clase WindowElementHandler
+__________________________________________________________________________________________________
+Pasos para implementar:
+
+* Restaurar la base de datos del backup 0001-ExpDat20100824_225420.jar
+* Ejecutar el script 0002-MOD-AD_Package_Exp_Detail.sql
+* Ejecutar el script 0003_LAR_Inserta_EntityType_OPB_LAR.sql
+* Importar el paquete 0004-LAR_PackOutExtension.zip

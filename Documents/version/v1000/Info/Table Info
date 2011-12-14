@@ -1,0 +1,14 @@
+En este archivo se describen los campos y tablas agregados en esta versión:
+
+___________________________________________________________________________
+* AD_Package_Exp_Detail
+	+AD_Tab0_ID numeric(10,0): 	
+		Tab a exportar
+	+AD_Tab1_ID numeric(10,0): 
+		Tab a exportar
+	+AD_Tab2_ID numeric(10,0): 
+		Tab a exportar
+	+AD_Tab3_ID numeric(10,0): 
+		Tab a exportar
+	+TargetEntityType_ID numeric(10,0): 
+		Entity tipe al que deben pertenecer los elementos para ser incluídos en el paquete exportado

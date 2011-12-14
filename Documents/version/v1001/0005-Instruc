@@ -1,0 +1,102 @@
+LAR v1001: LARPayment
+__________________________________________________________________________________________________
+Siguiendo las instrucciones se agrega a este proyecto:
+
+Modificaciones al funcionamiento de payments:
+	Se crea una ventana de cobros y una de pagos
+	Se crea una tabla que actúa como cabecera de payments 
+ 
+__________________________________________________________________________________________________
+
+Requerimientos:
+	 * LARv1000
+__________________________________________________________________________________________________
+Modificaciones:
+
+
+//DB
+
++ Agregada la tabla LAR_PaymentHeader
+	+ Agregada columna LAR_PaymentHeader_ID numeric(10, 0)
+    + Agregada columna C_DocType_ID numeric(10, 0)
+    + Agregada columna DocumentNo varchar(50)
+    + Agregada columna DateTrx timestamp(0)
+    + Agregada columna C_BPartner_ID numeric(10, 0)
+    + Agregada columna DocStatus varchar(2)
+    + Agregada columna ProcessIt char(1)
+    + Agregada columna BuscarPagos char(1)
+    + Agregada columna Processed
+    + Agregada columna IsReceipt
+    + Agregada columna Detalle
+
+* Modificada tabla C_Payment
+	+ Agregada columna LAR_PaymentHeader_ID numeric(10, 0)
+	+ Agregada columna LAR_PaymentSource_ID numeric(10, 0)
+
+//Diccionario
++ Agregada tabla LAR_PaymentHeader
+* Modificada tabla C_Payment
+	+ Agregada columna LAR_PaymentHeader_ID
+	+ Agregada columna LAR_PaymentSource_ID
+
++ Creada ventana de Cobros
+	+Creado tab cabecera 
+	+Creado tab detalle
++ Creada ventana de Pagos
+	+Creado tab cabecera
+	+Creado tab detalle
++ Creado menú para ventana Cobros: LAR > Cobros
++ Creado menú para ventana Pagos: LAR > Pagos
++ Creado proceso LAR_PaymentHeader_Process (ver LAR_ProcesarCabecera)
++ Creado proceso SeleccionarDocumentosEnCartera, (ver LAR_SeleccionarDocumentosEnCartera)
++ Creada validación para que traiga solo los doctype basados en ARR: 
+	"C_DocType Receipts"
++ Creada validación para que traiga solo los doctype basados en APP: 
+	"C_DocType Payments"
++ Creada Validación para la referencia All_Document Action	que traiga solo CO, RC y VO: 
+	"List - DocAction - CO,RC,VO"
+
+* Modificada entrada de System Configurator,
+	seteado PAYMENT_OVERWRITE_DOCUMENTNO_WITH_CHECK_ON_PAYMENT = N
+* Modificada entrada de System Configurator,
+	seteado PAYMENT_OVERWRITE_DOCUMENTNO_WITH_CHECK_ON_RECEIPT =N
+* Modificada entrada de System Configurator,
+	seteado PAYMENT_OVERWRITE_DOCUMENTNO_WITH_CREDIT_CARD =N
+	
+
+//Fuente
++ Creada clase MPaymentHeader
++ Creado proceso LAR_ProcesarCabecera, procesa en lote los documentos que pertenecen a una cabecera
++ Creado proceso LAR_SeleccionarDocumentosEnCartera, despliega la ventana de documentos en cartera y copia los
+	seleccionados como nuevos payments de tipo APP en el detalle de la cabecera del pago
++ Creada clases para la ventana de búsqueda de documentos en cartera:
+	InfoDocEnCartera.java, InfoFactoryDocEnCartera.java
+
++ Sobreescrita clase Allocation, se agregaron las columnas Forma de Pago, NºCheque, Tarjeta y NºTarjeta
+	* Modificado método getPaymentData
+	* Modificado método getPaymentColumnNames
+	* Modificado método setPaymentColumnClass
+
++ Sobreescrita clase CalloutPayment, 
+	* Modificado método invoice: si LAR_PaymentSource_ID != null no sobreescribe el monto del payment, recalcula overUnderAmount
+	* Modificado método order: si LAR_PaymentSource_ID != null no sobreescribe el monto del payment, recalcula overUnderAmount
+	* Modificado método amounts: si LAR_PaymentSource_ID != null en lugar de recalcular el PayAmt, recalcula overUnderAmount
+
+* Modificada clase LAR_Validator
+	+ Agregado método setReconcilied, setea un payment como reconciliado o no
+	+ Agregada la tabla C_Payment al validator
+	* Modificado el método modelChange,
+		si se modifica un pago que tenga un recibo asociado (se hace un pago con un cheque en cartera),
+		entonces se setean el recibo y el pago como reconciliados  
+
+//TODO German ¿¿hacer??		
+	* Corregir ventana de seleccionar facturas en ventana de pagos, ver check transacción de ventas
+	* Corregir ventana de seleccionar órdenes en ventana de pagos, ver check transacción de ventas
+__________________________________________________________________________________________________
+Pasos para implementar:
+
+	* Ejecutar script 0006-PrePkg.sql
+	* Importar paquete 0007-LAR_PaymentCustom.zip
+	* Ejecutar script 0008-PostPkg.sql
+	* Actualizar roles
+	* Reiniciar los clientes de AD que se estén ejecutando

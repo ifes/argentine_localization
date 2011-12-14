@@ -1,0 +1,26 @@
+LAR v1002: Control de Version
+__________________________________________________________________________________________________
+Siguiendo las instrucciones se agrega a este proyecto:
+
+	Soporte para el control de versión (ADVersionControl 1.0.0.0)
+ 
+__________________________________________________________________________________________________
+
+Requerimientos:
+	 * LAR v1001
+	 * ADVersionControl v1000
+__________________________________________________________________________________________________
+Modificaciones:
+
+	(ver ADVersionControl v1000 ya que se incorpora a este proyecto en esta versión)
+
+//DB
+
+//Diccionario
+
+//Fuente
+
+__________________________________________________________________________________________________
+Pasos para implementar:
+	* Actualizar a la versión 1000 (Versión inicial) de ADVersionControl 
+	* Ejecutar script 0010-InitVersion.sql

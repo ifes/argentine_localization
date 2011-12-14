@@ -1,0 +1,104 @@
+LAR (Proyecto BLUE) 
+
+--------------------------------------------------------------------------------------------------------------------------------
+v1001 Cobros-Pagos
+--------------------------------------------------------------------------------------------------------------------------------
+
+Crear una ventana para cobros y otra para pagos.
+
+En ambas ventanas habrá una cabecera y un detalle. 
+
+En la cabecera se llenarán datos propios del cobro/pago, en el detalle se cargarán datos 
+relacionados a los medios y montos de la operación.
+
+En ambas ventanas habrá un botón en la cabecera para procesar el documento, que procesará 
+todos los payments que dependan de la misma.
+
+En la ventana de pagos habrá un botón para buscar "documentos en cartera", al seleccionarlos
+se copiarán los datos de estos documentos como nuevos payments (de tipo APP) vinculados a la cabecera
+desde la que se buscaron.
+
+Tareas:
+	* Crear tabla para guardar datos de la cabecera en DB 								//HECHO LAR_PaymentHeader
+	* Agregar la tabla de la cabecera de payments al diccionario						//HECHO
+
+	* Modificar en DB tabla C_Payment 													//HECHO
+		+agregar columna C_PaymentHeader_ID												//HECHO
+		+agregar columna C_PaymentSource_ID												//HECHO
+	* Actualizar la tabla C_Payment en el diccionario									//HECHO
+	
+	* Crear validación para que traiga solo los doctype basados en ARR					//HECHO: "C_DocType Receipts"
+	* Crear validación para que traiga solo los doctype basados en APP					//HECHO: "C_DocType Payments"
+
+	* Crear Validación para la referencia All_Document Action, que traiga solo 			//HECHO: "List - DocAction - CO,RC,VO"
+		CO, RC y VO
+
+	* Crear ventana de Cobros															//HECHO
+		* Crear tab Cabecera															//HECHO
+		* Agregar filtro a la cabecera para que solo muestre documentos de tipo recibo	//HECHO
+		* Crear tab Detalle como subtab de Cabecera 									//HECHO
+			* Al cargar una línea de detalle se deben heredar los datos de la cabecera 	//HECHO
+			* Ocultar campos ya desplegados en la cabecera							 	//HECHO
+		* Crear Menú para la ventana Cobros												//HECHO
+
+
+	* Crear ventana de búsqueda para seleccionar "documentos en cartera" (Cobros)		//HECHO
+		* Crear clase InfoDocEnCartera.java												//HECHO
+		* Crear clase InfoFactoryDocEnCartera.java										//HECHO
+		* Filtrar los documentos que ya fueron usados en otra cabecera					//HECHO
+
+	* Crear proceso que llame a la ventana de búsqueda de documentos en cartera			//HECHO
+		* Crear proceso en fuente														//HECHO: LAR_SeleccionarDocumentosEnCartera
+		* Agregar proceso en el diccionario												//HECHO: SeleccionarDocumentosEnCartera
+
+	* Crear ventana de Pagos															//HECHO
+		* Crear tab Cabecera															//HECHO
+		* Agregar filtro a la cabecera para que muestre documentos de tipo NO recibo	//HECHO
+			* Agregar botón para llamar a ventana de búsqueda							//HECHO
+		* Crear tab detalle																//HECHO
+			* Al cargar una línea de detalle se deben heredar los datos de la cabecera 	//HECHO
+			* Ocultar campos ya desplegados en la cabecera							 	//HECHO	
+			* No dejar modificar los payments que tengan LAR_PaymentSource_ID != null	//HECHO
+		* Crear Menú para la ventana Pagos												//HECHO
+
+	* Crear clase MPaymentHeader														//HECHO
+		* Al eliminar la cabecera eliminar todos los payments asociados					//HECHO
+		* Crear método para completar payments en cola									//HECHO
+		* Al modificar los datos de la cabecera, debería modificar los datos de 	  	//HECHO
+			los payments que dependen de ella
+
+	* Crear proceso para procesar payments en cola										//HECHO
+		* Crear el fuente del proceso													//HECHO
+		* Agregar al diccionario														//HECHO: LAR_PaymentHeader_Process
+
+	* Agregar en la ventana de asignaciones para cada payment							//HECHO
+		información sobre el medio de pago, nro de cheque y tipo y nro de tarjeta
+
+	* En el System configurator setear los siguientes valores							//HECHO
+		* PAYMENT_OVERWRITE_DOCUMENTNO_WITH_CHECK_ON_PAYMENT = N 						//HECHO
+		* PAYMENT_OVERWRITE_DOCUMENTNO_WITH_CHECK_ON_RECEIPT =N  						//HECHO
+		* PAYMENT_OVERWRITE_DOCUMENTNO_WITH_CREDIT_CARD =N 								//HECHO
+
+	* Modificar CalloutPayment 															//HECHO
+		* Modificado método invoice: 													//HECHO
+			si LAR_PaymentSource_ID != null no sobreescribir el monto del payment, 		//HECHO
+			recalcula overUnderAmount													//HECHO
+		* Modificado método order: 														//HECHO
+			si LAR_PaymentSource_ID != null no sobreescribir el monto del payment, 		//HECHO
+			recalcula overUnderAmount													//HECHO
+		* Modificado método amounts: 													//HECHO
+			si LAR_PaymentSource_ID != null en lugar de recalcular el PayAmt, 			//HECHO
+			recalcula overUnderAmount													//HECHO
+
+
+"//¿¿hacer??		
+"	* Corregir ventana de seleccionar facturas en ventana de pagos, ver check transacción de ventas
+"	* Corregir ventana de seleccionar órdenes en ventana de pagos, ver check transacción de ventas
+
+
+"Ventana Cobros/Pagos																		//
+"	Cómo filtrar las opciones desplegadas por el botón procesar según el estado del documento
+	* Al traer un Chq. limpiar el Sobre/Sub Pago. 										//HECHO
+	* Al seleccionar un C_CashBook_ID ocultar el campo C_BankAccount_ID					// HECHO: se oculta OK
+* Tabla C_Payment 
+	Armar callout para que al seleccionar un C_CashBook_ID setear en null C_BankAccount_ID

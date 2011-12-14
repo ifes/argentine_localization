@@ -1,0 +1,5 @@
+Es una carpeta para alojar de manera TEMPORAL los scripts; una vez testeados, son movidos a la carpeta Documents y version correspondiente.
+
+La carpeta scripts contiene todos los scripts utilizados para la localizacion argentina. 
+
+Estan numerados en orden de aplicacion.

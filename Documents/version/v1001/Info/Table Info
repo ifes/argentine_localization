@@ -1,0 +1,34 @@
+En este archivo se describen las tablas y campos (no AD Standard) agregados en esta versión:
+
+___________________________________________________________________________
++ LAR_PaymentHeader
+	Esta tabla agrupa Payments, de ahora en más representará un pago concreto, mientras que los payments serán
+	porciones de este pago (diferentes medios de pagoy asignaciones)
+	+ LAR_PaymentHeader_ID numeric(10, 0): 
+		Clave de la tabla
+    + C_DocType_ID numeric(10, 0):
+    	 Tipo de documento
+    + DocumentNo varchar(50): 
+    	Número de Recibo
+    + DateTrx timestamp(0): 
+    	Fecha de transacción
+    + C_BPartner_ID numeric(10, 0): 
+    	Socio de Negocios
+    + DocStatus varchar(2): 
+    	Estado del documento
+    + ProcessIt char(1): 
+    	Proceso de completar/revertir/anular
+    + BuscarPagos char(1): 
+    	Proceso que llama a un form para buscar payments (documentos en cartera) e importarlos para un pago a proveedores
+	+ Detalle char(1):
+		Campo para incluír la pestaña detalle
+    + IsReceipt : char(1):
+    	Indica si el documento es un recibo
+    + Processed : char(1):
+    	Indica si el documento fue procesado
+___________________________________________________________________________
+* Modificada tabla C_Payment
+	+ LAR_PaymentHeader_ID numeric(10, 0):
+		Cabecera de pagos a la que pertenece el payment
+	+ LAR_PaymentSource_ID numeric(10, 0):
+		ID del cobro que se usó como documento en cartera para generar el pago

@@ -1,0 +1,17 @@
+en ad_package_exp_detail
+
+debes agregar respetando mayusculas y minusculas
+
+AD_Tab0_ID numeric(10,0),
+AD_Tab1_ID numeric(10,0),
+AD_Tab2_ID numeric(10,0),
+AD_Tab3_ID numeric(10,0),
+OnlyUser character(1) DEFAULT 'N'
+
+
+los campos tab son referencias a AD_Tab
+y el OnlyUser es solo yes/no
+
+en el video explico tmb.
+
+saludos
