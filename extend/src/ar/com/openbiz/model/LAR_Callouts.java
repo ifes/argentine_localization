@@ -14,7 +14,7 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.openbiz.model;
+package ar.com.openbiz.model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

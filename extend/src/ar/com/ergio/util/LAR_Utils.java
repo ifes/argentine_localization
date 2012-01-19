@@ -16,10 +16,15 @@
  *****************************************************************************/
 package ar.com.ergio.util;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 
+import org.compiere.model.MBPartner;
 import org.compiere.model.MInvoice;
 import org.compiere.util.CLogger;
+import org.compiere.util.DB;
 import org.compiere.util.Env;
 
 import ar.com.ergio.model.LAR_MDocType;
@@ -129,4 +134,33 @@ public final class LAR_Utils {
 	}
 	return result;
     }
+    
+    /**
+	 * Valida que el nro.documento sea unico
+	 * @param taxID
+	 * @return
+	 */
+	public static boolean taxIDUnico(String taxID, MBPartner bp) throws SQLException 
+	{
+		boolean isUnique = true;
+		
+		String sqlsearch = "SELECT Count(*) "
+			             +  " FROM C_BPartner"
+			             + " WHERE C_BPartner_ID <> "+ bp.getC_BPartner_ID() 
+		                  +  " AND Trim(Replace(taxid,'-','')) = '"+taxID+"'"
+			              +  " AND IsActive = 'Y'"
+			              +  " AND AD_Client_ID = "+ Env.getAD_Client_ID(bp.getCtx());
+		
+		
+		PreparedStatement pstmtsearch = DB.prepareStatement(sqlsearch, bp.get_TrxName());
+		ResultSet rssearch = pstmtsearch.executeQuery();
+		if (rssearch.next())
+			isUnique = rssearch.getInt(1) == 0 ? true : false;
+		rssearch.close();
+		pstmtsearch.close();
+		return isUnique;
+	
+	}  //  taxIDUnico
+    
+    
 }

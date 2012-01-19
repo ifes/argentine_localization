@@ -14,7 +14,7 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.openbiz.model;
+package ar.com.openbiz.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -144,7 +144,7 @@ public interface I_LAR_TipoContribuyente
 	  */
 	public int getLAR_ClaseDocumento_ID();
 
-	public org.openbiz.model.I_LAR_ClaseDocumento getLAR_ClaseDocumento() throws RuntimeException;
+	public ar.com.openbiz.model.I_LAR_ClaseDocumento getLAR_ClaseDocumento() throws RuntimeException;
 
     /** Column name LAR_TipoContribuyente_ID */
     public static final String COLUMNNAME_LAR_TipoContribuyente_ID = "LAR_TipoContribuyente_ID";

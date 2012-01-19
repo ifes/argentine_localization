@@ -14,7 +14,7 @@
  * ComPiere, Inc., 2620 Augustine Dr. #245, Santa Clara, CA 95054, USA        *
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
-package org.openbiz.model;
+package ar.com.openbiz.model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +36,8 @@ import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
+
+import ar.com.ergio.util.LAR_Utils;
 
 
 /**
@@ -115,14 +117,13 @@ public class LAR_Validator implements ModelValidator
 			String taxID = bp.getTaxID();
 			
 			// Valida que el nro. documento ingresado sea unico
-			if(taxID != null && !taxIDUnico(taxID, bp))
+			if(taxID != null && !LAR_Utils.taxIDUnico(taxID, bp))
 				// El documento ingresado ya Existe 
 				return Msg.getMsg(bp.getCtx(), "LAR_CUITDuplicated");
 			
 			// Si el tipo de documento requiere validacion => lo valida
 			if (taxID != null && validationRequired(claseDoc_ID, bp.get_TrxName())) 
 			{
-			
 				msg = taxIDValido(taxID, bp.getCtx());
 				if (msg != null)
 					return msg;  
@@ -315,23 +316,16 @@ public class LAR_Validator implements ModelValidator
 	
 	private String taxIDValido (String taxID, Properties ctx)  throws SQLException {
 
-//		String taxID= "";
-		
-         taxID = taxID.replace( " ","" );
+        taxID = taxID.replace( " ","" );
         
         log.fine("taxID = "+taxID.toString());
 		
-		/* 1) tomo el cuit y lo leo en un arreglo
-		 * 2) genero un valor de modulo multiplicando c/nro por un valor arbitrario
-		 * 3) comparo valor modulo con ultimo digito verif
-		*/
 		if (taxID.length()==13 || taxID.length()==12){
 			taxID = taxID.replace( "-","" );
 		}
 		
 		if(!IsNumeric(taxID))
 			return Msg.getMsg(ctx , "LAR_CUITNotNumber"); //"CUIT/CUIL debe ser NUMERICO";
-		
 		
 		char[] arreglo = taxID.toCharArray();
 		
@@ -344,60 +338,12 @@ public class LAR_Validator implements ModelValidator
 		if (digitos != 20 && digitos != 23 && digitos != 24 && digitos != 27 && digitos != 30 && digitos != 33 && digitos != 34)
 			return Msg.getMsg(ctx , "LAR_CUITInvalidStart")+ taxID.substring(0, 2);   //El CUIT/CUIL comienza con un valor invalido
 
-		String str = new String("");
-		Integer valor = 0;
-		Integer modulo = 0;
-		//1
-		str = String.copyValueOf( arreglo,0,1);
-		valor = Integer.parseInt(str);
-		modulo = valor * 5;
-		//2
-		str = String.copyValueOf( arreglo,1,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 4);
-		//3
-		str = String.copyValueOf( arreglo,2,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 3);
-		//4
-		str = String.copyValueOf( arreglo,3,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 2);
-		//5
-		str = String.copyValueOf( arreglo,4,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 7);
-		//6
-		str = String.copyValueOf( arreglo,5,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 6);
-		//7
-		str = String.copyValueOf( arreglo,6,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 5);
-		//8
-		str = String.copyValueOf( arreglo,7,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 4);
-		//9
-		str = String.copyValueOf( arreglo,8,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 3);
-		//10
-		str = String.copyValueOf( arreglo,9,1);
-		valor = Integer.parseInt(str);
-		modulo = modulo + (valor * 2);
-
-		modulo = (11 - (modulo % 11) ) % 11 ;
+	    if (!LAR_Utils.validateCUIT(taxID)) {
+      	return Msg.getMsg(ctx , "LAR_CUITInvalid");  // CUIT/CUIL INVALIDO
+        }
 		
-		//digito verif 11
-		str = String.copyValueOf( arreglo,10,1);
-		valor = Integer.parseInt(str);
-		
-		if (valor.equals(modulo)) // CUIT/CUIL Ok
-		  return null;
-
-		return Msg.getMsg(ctx , "LAR_CUITInvalid");  // CUIT/CUIL INVALIDO
+	    return null;
+	
 	}  //  taxIDValido
 
 	/**
@@ -439,32 +385,7 @@ public class LAR_Validator implements ModelValidator
 		return validationRequired;
 	}  //  validationRequired
 
-	/**
-	 * Valida que el nro.documento sea unico
-	 * @param taxID
-	 * @return
-	 */
-	private boolean taxIDUnico(String taxID, MBPartner bp) throws SQLException 
-	{
-		boolean isUnique = true;
-		
-		String sqlsearch = "SELECT Count(*) "
-			             +  " FROM C_BPartner"
-			             + " WHERE C_BPartner_ID <> "+ bp.getC_BPartner_ID() 
-		                  +  " AND Trim(Replace(taxid,'-','')) = '"+taxID+"'"
-			              +  " AND IsActive = 'Y'"
-			              +  " AND AD_Client_ID = "+ Env.getAD_Client_ID(bp.getCtx());
-		
-		
-		PreparedStatement pstmtsearch = DB.prepareStatement(sqlsearch, bp.get_TrxName());
-		ResultSet rssearch = pstmtsearch.executeQuery();
-		if (rssearch.next())
-			isUnique = rssearch.getInt(1) == 0 ? true : false;
-		rssearch.close();
-		pstmtsearch.close();
-		return isUnique;
 	
-	}  //  taxIDUnico
 	
 	
 	/**
@@ -553,14 +474,6 @@ public class LAR_Validator implements ModelValidator
 				return msg;
 			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
 		return null;
 	}	//	docValidate
 

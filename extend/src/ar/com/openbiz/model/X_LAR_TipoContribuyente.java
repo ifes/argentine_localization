@@ -15,17 +15,17 @@
  * or via info@compiere.org or http://www.compiere.org/license.html           *
  *****************************************************************************/
 /** Generated Model - DO NOT CHANGE */
-package org.openbiz.model;
+package ar.com.openbiz.model;
 
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Model for LAR_ClaseDocumento
+/** Generated Model for LAR_TipoContribuyente
  *  @author Adempiere (generated) 
  *  @version Release 3.6.0LTS - $Id$ */
-public class X_LAR_ClaseDocumento extends PO implements I_LAR_ClaseDocumento, I_Persistent 
+public class X_LAR_TipoContribuyente extends PO implements I_LAR_TipoContribuyente, I_Persistent 
 {
 
 	/**
@@ -34,23 +34,20 @@ public class X_LAR_ClaseDocumento extends PO implements I_LAR_ClaseDocumento, I_
 	private static final long serialVersionUID = 20110728L;
 
     /** Standard Constructor */
-    public X_LAR_ClaseDocumento (Properties ctx, int LAR_ClaseDocumento_ID, String trxName)
+    public X_LAR_TipoContribuyente (Properties ctx, int LAR_TipoContribuyente_ID, String trxName)
     {
-      super (ctx, LAR_ClaseDocumento_ID, trxName);
-      /** if (LAR_ClaseDocumento_ID == 0)
+      super (ctx, LAR_TipoContribuyente_ID, trxName);
+      /** if (LAR_TipoContribuyente_ID == 0)
         {
-			setIsMandatoryDocNo (false);
-// N
-			setIsValidationRequired (false);
-// N	
-			setLAR_ClaseDocumento_ID (0);
+			setDiscriminateTax (false);
+			setLAR_TipoContribuyente_ID (0);
 			setName (null);
 			setValue (null);
         } */
     }
 
     /** Load Constructor */
-    public X_LAR_ClaseDocumento (Properties ctx, ResultSet rs, String trxName)
+    public X_LAR_TipoContribuyente (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
@@ -72,10 +69,30 @@ public class X_LAR_ClaseDocumento extends PO implements I_LAR_ClaseDocumento, I_
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_LAR_ClaseDocumento[")
+      StringBuffer sb = new StringBuffer ("X_LAR_TipoContribuyente[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Codigo AFIP.
+		@param CodeAFIP 
+		Codigo segun AFIP
+	  */
+	public void setCodeAFIP (int CodeAFIP)
+	{
+		set_Value (COLUMNNAME_CodeAFIP, Integer.valueOf(CodeAFIP));
+	}
+
+	/** Get Codigo AFIP.
+		@return Codigo segun AFIP
+	  */
+	public int getCodeAFIP () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_CodeAFIP);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	/** Set Description.
 		@param Description 
@@ -94,21 +111,21 @@ public class X_LAR_ClaseDocumento extends PO implements I_LAR_ClaseDocumento, I_
 		return (String)get_Value(COLUMNNAME_Description);
 	}
 
-	/** Set Nro Documento Obligatorio.
-		@param IsMandatoryDocNo 
-		Nro Documento Obligatorio
+	/** Set Discrimina I.V.A..
+		@param DiscriminateTax 
+		Discrimina el I.V.A.
 	  */
-	public void setIsMandatoryDocNo (boolean IsMandatoryDocNo)
+	public void setDiscriminateTax (boolean DiscriminateTax)
 	{
-		set_Value (COLUMNNAME_IsMandatoryDocNo, Boolean.valueOf(IsMandatoryDocNo));
+		set_Value (COLUMNNAME_DiscriminateTax, Boolean.valueOf(DiscriminateTax));
 	}
 
-	/** Get Nro Documento Obligatorio.
-		@return Nro Documento Obligatorio
+	/** Get Discrimina I.V.A..
+		@return Discrimina el I.V.A.
 	  */
-	public boolean isMandatoryDocNo () 
+	public boolean isDiscriminateTax () 
 	{
-		Object oo = get_Value(COLUMNNAME_IsMandatoryDocNo);
+		Object oo = get_Value(COLUMNNAME_DiscriminateTax);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
@@ -118,29 +135,10 @@ public class X_LAR_ClaseDocumento extends PO implements I_LAR_ClaseDocumento, I_
 		return false;
 	}
 
-	/** Set Validacion requerida.
-		@param IsValidationRequired 
-		Documento requiere validacion
-	  */
-	public void setIsValidationRequired (boolean IsValidationRequired)
-	{
-		set_Value (COLUMNNAME_IsValidationRequired, Boolean.valueOf(IsValidationRequired));
-	}
-
-	/** Get Validacion requerida.
-		@return Documento requiere validacion
-	  */
-	public boolean isValidationRequired () 
-	{
-		Object oo = get_Value(COLUMNNAME_IsValidationRequired);
-		if (oo != null) 
-		{
-			 if (oo instanceof Boolean) 
-				 return ((Boolean)oo).booleanValue(); 
-			return "Y".equals(oo);
-		}
-		return false;
-	}
+	public ar.com.openbiz.model.I_LAR_ClaseDocumento getLAR_ClaseDocumento() throws RuntimeException
+    {
+		return (ar.com.openbiz.model.I_LAR_ClaseDocumento)MTable.get(getCtx(), ar.com.openbiz.model.I_LAR_ClaseDocumento.Table_Name)
+			.getPO(getLAR_ClaseDocumento_ID(), get_TrxName());	}
 
 	/** Set Clase Documento.
 		@param LAR_ClaseDocumento_ID 
@@ -149,9 +147,9 @@ public class X_LAR_ClaseDocumento extends PO implements I_LAR_ClaseDocumento, I_
 	public void setLAR_ClaseDocumento_ID (int LAR_ClaseDocumento_ID)
 	{
 		if (LAR_ClaseDocumento_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_LAR_ClaseDocumento_ID, null);
+			set_Value (COLUMNNAME_LAR_ClaseDocumento_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_LAR_ClaseDocumento_ID, Integer.valueOf(LAR_ClaseDocumento_ID));
+			set_Value (COLUMNNAME_LAR_ClaseDocumento_ID, Integer.valueOf(LAR_ClaseDocumento_ID));
 	}
 
 	/** Get Clase Documento.
@@ -160,6 +158,29 @@ public class X_LAR_ClaseDocumento extends PO implements I_LAR_ClaseDocumento, I_
 	public int getLAR_ClaseDocumento_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_LAR_ClaseDocumento_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Tipo Contribuyente.
+		@param LAR_TipoContribuyente_ID 
+		Tipo de contribuyente
+	  */
+	public void setLAR_TipoContribuyente_ID (int LAR_TipoContribuyente_ID)
+	{
+		if (LAR_TipoContribuyente_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_LAR_TipoContribuyente_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_LAR_TipoContribuyente_ID, Integer.valueOf(LAR_TipoContribuyente_ID));
+	}
+
+	/** Get Tipo Contribuyente.
+		@return Tipo de contribuyente
+	  */
+	public int getLAR_TipoContribuyente_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_LAR_TipoContribuyente_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

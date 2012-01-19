@@ -89,7 +89,7 @@ public final class Adempiere
 	static public final String	COPYRIGHT		= "\u00A9 1999-2010 ADempiere\u00AE";
 
 	static public String		s_ImplementationVersion = "2011-07-28 v1.0.5 (rev.73) - OPB_LAR";
-	static public String		s_ImplementationVendor = "OPENBIZ";
+	static public String		s_ImplementationVendor = "Ergio & OPENBIZ";
 
 	static private Image 		s_image16;
 	static private Image 		s_image48x15;

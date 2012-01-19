@@ -1,4 +1,4 @@
-package org.openbiz.process;
+package ar.com.openbiz.process;
 
 import java.math.BigDecimal;
 
