@@ -16,7 +16,6 @@ CREATE TABLE LAR_ClaseDocumento
  Name varchar(60) NOT NULL,
  Value varchar(40) NOT NULL,
  Description varchar(255),
- --CodeAFIP varchar(2),
  IsMandatoryDocNo char(1) NOT NULL DEFAULT 'N'::bpchar,
  IsValidationRequired char(1) NOT NULL DEFAULT 'N'::bpchar,
 
