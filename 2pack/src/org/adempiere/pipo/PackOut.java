@@ -92,6 +92,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * 			<li>--
  * 			<li>FR [ 2847727 ] 2pack export all messages for a entity type functionality
  * 				https://sourceforge.net/tracker/?func=detail&atid=879335&aid=2847727&group_id=176962
+ * @author openbiz
+ * 			Export only a user-defined entity (i.e. OPB_LAR, QSS_LCO)
  */
 
 public class PackOut extends SvrProcess
@@ -287,11 +289,11 @@ public class PackOut extends SvrProcess
 						//
 						log.info(rs.getString(X_AD_Package_Exp_Detail.COLUMNNAME_Line));
 						if (Type.compareTo("M") == 0){
-							//gwagner custom
+							//openbiz custom
 							int entityTypeID=rs.getInt("TargetEntityType_ID");
 							String entityType = new MEntityType(getCtx(),entityTypeID, get_TrxName()).getEntityType();
 							createMenu(rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Menu_ID), packOutDocument, entityType);
-							//gwagner custom end
+							//openbiz custom end
 						}
 						else if (Type.compareTo("P") == 0)
 							createProcess ( rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Process_ID), packOutDocument );
@@ -301,16 +303,16 @@ public class PackOut extends SvrProcess
 							createData ( rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Table_ID), rs.getString(X_AD_Package_Exp_Detail.COLUMNNAME_SQLStatement), packOutDocument );
 						else if (Type.compareTo("T") == 0)
 						{
-							//gwagner custom
+							//openbiz custom
 							int entityTypeID=rs.getInt("TargetEntityType_ID");
 							String entityType = new MEntityType(getCtx(),entityTypeID, get_TrxName()).getEntityType();
-							//gwagner custom end
+							//openbiz custom end
 							createTable (rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Table_ID), packOutDocument,entityType);
 						}
 						else if (Type.compareTo("X") == 0)
 							createForm (rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Form_ID), packOutDocument);
 						else if (Type.compareTo("W") == 0){
-							//faaguilar custom begin
+							//openbiz custom begin
 							int [] tabs= null;
 							if(rs.getString("AD_Tab0_ID")!=null && rs.getInt("AD_Tab0_ID")>0){
 								tabs=new int[4];
@@ -323,11 +325,9 @@ public class PackOut extends SvrProcess
 							if(rs.getString("AD_Tab3_ID")!=null && rs.getInt("AD_Tab3_ID")>0)
 								tabs[3]=rs.getInt("AD_Tab3_ID");
 							
-							//gwagner custom
 							int entityTypeID=rs.getInt("TargetEntityType_ID");
 							String entityType = new MEntityType(getCtx(),entityTypeID, get_TrxName()).getEntityType();
-								//gwagner custom end
-							//faaguilar custom end
+							//openbiz custom end
 							createWindow (rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Window_ID), packOutDocument,entityType,tabs);	
 							
 						}
