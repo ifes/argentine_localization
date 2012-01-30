@@ -224,22 +224,61 @@ public class WindowElementHandler extends AbstractElementHandler {
 		}
 	}
 	
-	//befin faaguilar windows tab method
-	public void create(Properties ctx, TransformerHandler document,String entityType, int... tabs)
+	
+	/**
+	 * Create window tab method: Just include the tabs selected by user. If no selection then all tabs will be included.
+	 * @author afalcone - openbiz
+	 */
+	public void create(Properties ctx, TransformerHandler document, String entityType, int AD_Package_Exp_Detail_ID)
 	throws SAXException {
 		int AD_Window_ID = Env.getContextAsInt(ctx, "AD_Window_ID");
 		PackOut packOut = (PackOut) ctx.get("PackOutProcess");
-		//faaguilar custom begin
+		
+		// Search for user-selected tabs 
 		String where="(0";
-		for(int i=0;i<tabs.length;i++)
-		{
-			if(tabs!=null && tabs[i]>0){
-				int t=tabs[i];
-				where+=","+t;
+		Boolean tabSelected = false;
+
+		String sqltab ="SELECT AD_Tab_ID FROM AD_Package_Exp_Detail_Tab WHERE AD_Package_Exp_Detail_ID = "+AD_Package_Exp_Detail_ID+
+		             " AND IsActive='Y' ORDER BY Line ASC";
+		
+		PreparedStatement pstmt = null;		
+		ResultSet rstab = null;
+		try
+		{			
+			pstmt = DB.prepareStatement (sqltab, getTrxName(ctx));
+			rstab = pstmt.executeQuery();
+			while (rstab.next())
+			{	
+				if (rstab.getInt("AD_Tab_ID")>0){
+					where+=","+rstab.getInt("AD_Tab_ID");
+					tabSelected = true;
+				}	
 			}
-		}
+			
+			rstab.close();
+			pstmt.close();
+			pstmt = null;
+		} catch (Exception e) {
+			log.log(Level.SEVERE, e.getLocalizedMessage(), e);
+			if (e instanceof SAXException)
+				throw (SAXException) e;
+			else if (e instanceof SQLException)
+				throw new DatabaseAccessException("Failed to export window.", e);
+			else if (e instanceof RuntimeException)
+				throw (RuntimeException) e;
+			else
+				throw new RuntimeException("Failed to export window.", e);
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+			}
+			pstmt = null;
+		}	
+			
 		where+=")";
-		//faaguilar custom end
+		//
 		
 		X_AD_Window m_Window = new X_AD_Window(ctx, AD_Window_ID, null);
 		AttributesImpl atts = new AttributesImpl();
@@ -248,9 +287,12 @@ public class WindowElementHandler extends AbstractElementHandler {
 		// Tab Tag
 		String sql = "SELECT * FROM AD_TAB WHERE AD_WINDOW_ID = "
 				+ AD_Window_ID; 
-		if(tabs.length>0)
-			sql+= " And AD_TAB_ID IN "+ where; //faaguilar custom
-		PreparedStatement pstmt = null;
+
+				
+		if(tabSelected)
+			sql+= " AND AD_TAB_ID IN "+ where; //There are tabs selected by user
+		
+		pstmt = null;
 		pstmt = DB.prepareStatement(sql, getTrxName(ctx));
 		try {
 			ResultSet rs = pstmt.executeQuery();

@@ -393,7 +393,8 @@ public class MenuElementHandler extends AbstractElementHandler {
 						|| rs.getInt("AD_WORKBENCH_ID") > 0) {
 					// Call CreateWindow.
 					if (rs.getInt("AD_WINDOW_ID") > 0) {
-						packOut.createWindow(rs.getInt("AD_WINDOW_ID"), document,entityType);//gwagner custom
+				packOut.createWindow(rs.getInt("AD_WINDOW_ID"), document,entityType,0);//openbiz custom
+	//					packOut.createWindow(rs.getInt("AD_WINDOW_ID"), document);//gwagner custom
 					}
 					// Call CreateProcess.
 					else if (rs.getInt("AD_PROCESS_ID") > 0) {
@@ -462,7 +463,7 @@ public class MenuElementHandler extends AbstractElementHandler {
 						|| rs.getInt("AD_WORKBENCH_ID") > 0) {
 					// Call CreateWindow.
 					if (rs.getInt("AD_WINDOW_ID") > 0) {
-						packOut.createWindow(rs.getInt("AD_WINDOW_ID"), document, null);//faaguilar custom
+						packOut.createWindow(rs.getInt("AD_WINDOW_ID"), document, null,0);//openbiz custom
 					}
 					// Call CreateProcess.
 					else if (rs.getInt("AD_PROCESS_ID") > 0) {

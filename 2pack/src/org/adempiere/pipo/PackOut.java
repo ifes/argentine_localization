@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * 			<li>FR [ 2847727 ] 2pack export all messages for a entity type functionality
  * 				https://sourceforge.net/tracker/?func=detail&atid=879335&aid=2847727&group_id=176962
  * @author openbiz
- * 			Export only a user-defined entity (i.e. OPB_LAR, QSS_LCO)
+ * 			Export only a user-defined entity (i.e. OPB_LAR, QSS_LCO) and/or just tabs required - Based on Fabian Aguilar's work
  */
 
 public class PackOut extends SvrProcess
@@ -313,22 +313,10 @@ public class PackOut extends SvrProcess
 							createForm (rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Form_ID), packOutDocument);
 						else if (Type.compareTo("W") == 0){
 							//openbiz custom begin
-							int [] tabs= null;
-							if(rs.getString("AD_Tab0_ID")!=null && rs.getInt("AD_Tab0_ID")>0){
-								tabs=new int[4];
-								tabs[0]=rs.getInt("AD_Tab0_ID");
-							}
-							if(rs.getString("AD_Tab1_ID")!=null && rs.getInt("AD_Tab1_ID")>0)
-								tabs[1]=rs.getInt("AD_Tab1_ID");
-							if(rs.getString("AD_Tab2_ID")!=null && rs.getInt("AD_Tab2_ID")>0)
-								tabs[2]=rs.getInt("AD_Tab2_ID");
-							if(rs.getString("AD_Tab3_ID")!=null && rs.getInt("AD_Tab3_ID")>0)
-								tabs[3]=rs.getInt("AD_Tab3_ID");
-							
 							int entityTypeID=rs.getInt("TargetEntityType_ID");
 							String entityType = new MEntityType(getCtx(),entityTypeID, get_TrxName()).getEntityType();
-							//openbiz custom end
-							createWindow (rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Window_ID), packOutDocument,entityType,tabs);	
+							createWindow (rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Window_ID), packOutDocument, entityType,rs.getInt(X_AD_Package_Exp_Detail.COLUMNNAME_AD_Package_Exp_Detail_ID));
+							// openbiz custom end
 							
 						}
 						else if (Type.compareTo("S") == 0)
@@ -652,13 +640,13 @@ public class PackOut extends SvrProcess
 	 * @param packOutDocument
 	 * @throws SAXException
 	 */
-	public void createWindow (int AD_Window_ID, TransformerHandler packOutDocument,String entityType, int... tabs) throws SAXException //faaguilar add tabs
+	public void createWindow (int AD_Window_ID, TransformerHandler packOutDocument,String entityType, int AD_Package_Exp_Detail_ID) throws SAXException 
 	{
 		Env.setContext(getCtx(), "AD_Window_ID", AD_Window_ID);
-		if(tabs==null)//faaguilar custom
+		if(AD_Package_Exp_Detail_ID==0)	//openbiz custom
 			windowHandler.create(getCtx(), packOutDocument);
 		else
-			windowHandler.create(getCtx(), packOutDocument,entityType,tabs);//faaguilar custom
+			windowHandler.create(getCtx(), packOutDocument,entityType, AD_Package_Exp_Detail_ID);//openbiz custom
 		getCtx().remove("AD_Window_ID");
 	}
 	
@@ -932,8 +920,7 @@ public class PackOut extends SvrProcess
 			System.out.println(e.toString());
 		}
 	}
-
-
+	
 	@Override
 	public Properties getCtx() {
 		return localContext != null ? localContext : super.getCtx();

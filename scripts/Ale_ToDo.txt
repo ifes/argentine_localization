@@ -1,6 +1,0 @@
-ALEJANDRO - ToDo List
-
-- Scripts para AD_Message WHERE EntityType='OPB_LAR'
-
-- Scripts para AD_SysConfig WHERE EntityType='OPB_LAR'
-
